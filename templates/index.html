@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="{{ current_lang }}">
+<head>
+    <title data-lang-key="title">老年2型糖尿病患者认知衰弱风险评估</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --success: #059669;
+            --warning: #eab308;
+            --danger: #dc2626;
+            --bg-light: #f8fafc;
+            --bg-card: #ffffff;
+            --text-dark: #1a365d;
+            --text-light: #4b5563;
+        }
+
+        * {
+            font-family: 'Noto Sans SC', sans-serif;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: var(--bg-card);
+            max-width: 800px;
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(34, 41, 51, 0.08);
+            padding: 40px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .logo i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .language-btn {
+            background: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.9rem;
+            transition: transform 0.2s ease;
+        }
+
+        .language-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--text-dark);
+            font-size: 2.25rem;
+            margin-bottom: 30px;
+        }
+
+        .form-section {
+            background: var(--bg-light);
+            padding: 30px;
+            border-radius: 16px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        label {
+            display: block;
+            color: var(--text-light);
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        select {
+            width: 100%;
+            padding: 16px 24px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: white;
+            appearance: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        select:hover {
+            border-color: var(--primary);
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="ri-health-line"></i>
+                <span data-lang-key="app-name"></span>
+            </div>
+            <button class="language-btn" id="toggleLang">
+                <i class="ri-globe-line"></i>
+                <span data-lang-key="language">中文</span>
+            </button>
+        </div>
+
+        <h1 data-lang-key="title">老年2型糖尿病患者认知衰弱风险评估</h1>
+
+        <form action="/predict" method="post" class="form-section">
+            <input type="hidden" id="current-lang" name="current_lang" value="{{ current_lang }}">
+
+            <div class="form-grid">
+                {% for feature in features %}
+                <div class="form-group">
+                    <label data-lang-key="{{ feature }}">{{ feature }}</label>
+                    <select id="{{ feature }}" name="{{ feature }}" required>
+                        <option value="" data-lang-key="select-placeholder">- 请选择</option>
+                        {% for option, value in feature_options[feature].items() %}
+                        <option value="{{ option }}" data-lang-key="{{ feature }}-{{ option }}">{{ option }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endfor %}
+            </div>
+
+            <button type="submit" class="submit-btn" data-lang-key="submit-btn">
+                <i class="ri-search-2-line"></i>
+                <span>开始评估</span>
+            </button>
+        </form>
+    </div>
+
+    <script>
+        // 完整的翻译字典
+        const translations = {
+            'zh-CN': {
+                'app-name': '健康评估',
+                'language': '中文',
+                'title': '老年2型糖尿病患者认知衰弱风险评估',
+                'submit-btn': '开始评估',
+                'select-placeholder': '- 请选择',
+                '年龄': '年龄',
+                '文化程度': '文化程度',
+                '规律运动': '规律运动',
+                '糖尿病慢性并发症数量': '糖尿病慢性并发症数量',
+                '营养不良': '营养不良',
+                '抑郁': '抑郁',
+                '年龄-60-69岁': '60-69岁',
+                '年龄-70-79岁': '70-79岁',
+                '年龄-80岁及以上': '80岁及以上',
+                '文化程度-小学及以下': '小学及以下',
+                '文化程度-初中': '初中',
+                '文化程度-高中/中专/技校': '高中/中专/技校',
+                '文化程度-大专及以上': '大专及以上',
+                '规律运动-否': '否',
+                '规律运动-是': '是',
+                '糖尿病慢性并发症数量-<2个': '<2个',
+                '糖尿病慢性并发症数量-≥2个': '≥2个',
+                '营养不良-否': '否',
+                '营养不良-是': '是',
+                '抑郁-否': '否',
+                '抑郁-是': '是'
+            },
+            'en': {
+                'app-name': 'Health Assessment',
+                'language': 'English',
+                'title': 'Cognitive Frailty Risk Assessment for Elderly Patients with Type 2 Diabetes',
+                'submit-btn': 'Start Assessment',
+                'select-placeholder': '- Select',
+                '年龄': 'Age',
+                '文化程度': 'Educational Level',
+                '规律运动': 'Regular Exercise',
+                '糖尿病慢性并发症数量': 'Number of Chronic Diabetic Complications',
+                '营养不良': 'Malnutrition',
+                '抑郁': 'Depression',
+                '年龄-60-69岁': '60-69 years',
+                '年龄-70-79岁': '70-79 years',
+                '年龄-80岁及以上': '80+ years',
+                '文化程度-小学及以下': 'Primary school or below',
+                '文化程度-初中': 'Junior high school',
+                '文化程度-高中/中专/技校': 'High school/Technical school',
+                '文化程度-大专及以上': 'College or above',
+                '规律运动-否': 'No',
+                '规律运动-是': 'Yes',
+                '糖尿病慢性并发症数量-<2个': '<2 unit',
+                '糖尿病慢性并发症数量-≥2个': '≥2 unit',
+                '营养不良-否': 'No',
+                '营养不良-是': 'Yes',
+                '抑郁-否': 'No',
+                '抑郁-是': 'Yes'
+            }
+        };
+
+        // 更新页面语言
+        function updateLanguage(lang) {
+            document.documentElement.lang = lang;
+            localStorage.setItem('preferredLanguage', lang);
+
+            // 更新有data-lang-key属性的元素
+            document.querySelectorAll('[data-lang-key]').forEach(element => {
+                const key = element.getAttribute('data-lang-key');
+                if (translations[lang] && translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+
+            // 更新选项文本
+            document.querySelectorAll('select option[data-lang-key]').forEach(option => {
+                const key = option.getAttribute('data-lang-key');
+                if (translations[lang] && translations[lang][key]) {
+                    option.textContent = translations[lang][key];
+                }
+            });
+        }
+
+        // 切换语言
+        function toggleLanguage() {
+            const currentLang = document.documentElement.lang;
+            const newLang = currentLang === 'zh-CN' ? 'en' : 'zh-CN';
+            document.getElementById('current-lang').value = newLang; // 更新隐藏字段
+            updateLanguage(newLang);
+        }
+
+        // 初始化语言
+        updateLanguage('{{ current_lang }}');
+
+        // 添加事件监听
+        document.getElementById('toggleLang').addEventListener('click', toggleLanguage);
+    </script>
+</body>
+</html>

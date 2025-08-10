@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="{{ current_lang }}">
+<head>
+    <title data-lang-key="title">评估结果</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --success: #059669;
+            --warning: #eab308;
+            --danger: #dc2626;
+            --bg-light: #f8fafc;
+            --bg-card: #ffffff;
+            --text-dark: #1a365d;
+            --text-light: #4b5563;
+        }
+
+        * {
+            font-family: 'Noto Sans SC', sans-serif;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: var(--bg-card);
+            max-width: 800px;
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(34, 41, 51, 0.08);
+            padding: 40px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .logo i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .language-btn {
+            background: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.9rem;
+            transition: transform 0.2s ease;
+        }
+
+        .result-card {
+            background: var(--bg-light);
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .risk-value {
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 20px 0 10px;
+        }
+
+        .risk-label {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        .risk-level {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.95rem;
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        .level-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .explanation {
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: var(--text-light);
+        }
+
+        .risk-guide {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .guide-item {
+            background: var(--bg-card);
+            padding: 25px;
+            border-radius: 14px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+        }
+
+        .guide-item:hover {
+            transform: translateY(-3px);
+        }
+
+        .guide-item h4 {
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .guide-item p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .input-summary {
+            border-top: 1px solid #e5e7eb;
+            padding-top: 30px;
+        }
+
+        .summary-title {
+            text-align: center;
+            color: var(--text-dark);
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+        }
+
+        .input-list {
+            display: grid;
+            gap: 18px;
+        }
+
+        .input-item {
+            background: var(--bg-light);
+            padding: 18px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+            color: var(--text-light);
+        }
+
+        .back-btn {
+            display: block;
+            width: fit-content;
+            margin: 30px auto 0;
+            padding: 16px 32px;
+            background: var(--primary);
+            color: white;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="ri-health-line"></i>
+                <span data-lang-key="app-name">健康评估</span>
+            </div>
+            <button class="language-btn" id="toggleLang">
+                <i class="ri-globe-line"></i>
+                <span data-lang-key="language">中文</span>
+            </button>
+        </div>
+
+        <h1 data-lang-key="title">评估结果</h1>
+
+        <div class="result-card">
+            <div class="risk-value">{{ risk_probability }}</div>
+            <div class="risk-label" data-lang-key="risk-label">存在认知衰弱的概率</div>
+            <p class="explanation" data-lang-key="explanation">
+                此概率为模型通过支持向量机算法计算得出，表示您的特征组合与认知衰弱患者的匹配程度，该结果仅供参考，不能替代专业医学诊断。
+            </p>
+        </div>
+
+
+        <div class="input-summary">
+            <h3 class="summary-title" data-lang-key="input-summary">你提供的信息</h3>
+            <div class="input-list">
+                {% for feature, value in input_data.items() %}
+                <div class="input-item">
+                    <span data-lang-key="{{ feature }}">{{ feature }}</span>
+                    <span data-lang-key="{{ value }}">{{ value }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <a href="/" class="back-btn" data-lang-key="back-btn">
+            <i class="ri-arrow-left-line"></i>
+            <span>返回首页</span>
+        </a>
+    </div>
+
+    <script>
+        // 结果页翻译字典
+        const translations = {
+            'zh-CN': {
+                'app-name': '健康评估',
+                'language': '中文',
+                'title': '评估结果',
+                'risk-label': '存在认知衰弱的概率',
+                'explanation': '此概率为模型通过支持向量机算法计算得出，表示您的特征组合与认知衰弱患者的匹配程度，该结果仅供参考，不能替代专业医学诊断。',
+                'caution': '注意',
+                'guide-low': '低风险',
+                'guide-low-text': '低风险，匹配度较低',
+                'guide-moderate': '中风险',
+                'guide-moderate-text': '中风险，需关注健康状态',
+                'guide-high': '高风险',
+                'guide-high-text': '高风险，建议医学筛查',
+                'input-summary': '你提供的信息',
+                'back-btn': '返回首页',
+                // 特征名称的中文映射
+                '年龄': '年龄',
+                '文化程度': '文化程度',
+                '规律运动': '规律运动',
+                '糖尿病慢性并发症数量': '糖尿病慢性并发症数量',
+                '营养不良': '营养不良',
+                '抑郁': '抑郁',
+                // 特征选项的中文映射
+                '60-69岁': '60-69岁',
+                '70-79岁': '70-79岁',
+                '80岁及以上': '80岁及以上',
+                '小学及以下': '小学及以下',
+                '初中': '初中',
+                '高中/中专/技校': '高中/中专/技校',
+                '大专及以上': '大专及以上',
+                '否': '否',
+                '是': '是',
+                '<2个': '<2个',
+                '≥2个': '≥2个'
+            },
+            'en': {
+                'app-name': 'Health Assessment',
+                'language': 'English',
+                'title': 'Assessment Result',
+                'risk-label': 'Probability of Cognitive Frailty',
+                'explanation': 'This probability is calculated by the SVM algorithm, representing the match between your feature combination and cognitive frailty cases,For reference only, not a substitute for professional medical diagnosis.',
+                'caution': 'Caution',
+                'guide-low': 'Low Risk',
+                'guide-low-text': 'Low risk, low match rate',
+                'guide-moderate': 'Moderate Risk',
+                'guide-moderate-text': 'Moderate risk, attention needed',
+                'guide-high': 'High Risk',
+                'guide-high-text': 'High risk, medical screening recommended',
+                'input-summary': 'Your Input Information',
+                'back-btn': 'Back to Home',
+                // 特征名称的英文映射
+                '年龄': 'Age',
+                '文化程度': 'Educational Level',
+                '规律运动': 'Regular Exercise',
+                '糖尿病慢性并发症数量': 'Number of Chronic Diabetic Complications',
+                '营养不良': 'Malnutrition',
+                '抑郁': 'Depression',
+                // 特征选项的英文映射
+                '60-69岁': '60-69 years',
+                '70-79岁': '70-79 years',
+                '80岁及以上': '80+ years',
+                '小学及以下': 'Primary school or below',
+                '初中': 'Junior high school',
+                '高中/中专/技校': 'High school/Technical school',
+                '大专及以上': 'College or above',
+                '否': 'No',
+                '是': 'Yes',
+                '<2个': '<2',
+                '≥2个': '≥2'
+            }
+        };
+
+        // 更新页面语言
+        function updateLanguage(lang) {
+            document.documentElement.lang = lang;
+            localStorage.setItem('preferredLanguage', lang);
+
+            // 更新有data-lang-key属性的元素
+            document.querySelectorAll('[data-lang-key]').forEach(element => {
+                const key = element.getAttribute('data-lang-key');
+                if (translations[lang] && translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+        }
+
+        // 切换语言
+        function toggleLanguage() {
+            const currentLang = document.documentElement.lang;
+            const newLang = currentLang === 'zh-CN' ? 'en' : 'zh-CN';
+            updateLanguage(newLang);
+        }
+
+        // 初始化语言
+        updateLanguage('{{ current_lang }}');
+
+        // 添加事件监听
+        document.getElementById('toggleLang').addEventListener('click', toggleLanguage);
+    </script>
+</body>
+</html>
