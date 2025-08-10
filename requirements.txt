@@ -1,7 +1,7 @@
-# 核心是固定 numpy 版本，使其与 pandas 兼容
-numpy==1.24.3
-pandas==1.5.3  # 保持之前的 pandas 版本
-flask==2.2.3
+Flask==2.2.3
+Werkzeug==2.2.3
+scikit-learn==1.1.3
+numpy==1.23.5
+pandas==1.5.3
 joblib==1.2.0
-scikit-learn==1.2.2
-werkzeug==2.2.3
+gunicorn==20.1.0
