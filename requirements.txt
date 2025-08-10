@@ -1,7 +1,6 @@
-Flask==2.2.3
-Werkzeug==2.2.3
-scikit-learn==1.1.3
-numpy==1.23.5
-pandas==1.5.3
-joblib==1.2.0
-gunicorn==20.1.0
+numpy==1.24.3       # 与Python 3.11兼容，修复核心模块加载问题
+pandas==1.5.3       # 兼容numpy 1.24.x
+flask==2.2.3        # 稳定版本，适配Python 3.11
+joblib==1.2.0       # 与scikit-learn 1.2.2兼容
+scikit-learn==1.2.2 # 提供预编译包，避免编译错误
+werkzeug==2.2.3     # 与Flask 2.2.3匹配
